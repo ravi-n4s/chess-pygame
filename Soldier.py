@@ -1,18 +1,46 @@
 import pygame
-import random
+from Elephant import Elephant
+
 
 class Soldier(pygame.sprite.Sprite):
-    def __init__(self, color, init_pos=None):
+    def __init__(self, color, size, init_pos=None):
         super(Soldier, self).__init__()
         self.color = color
-        self.surf = pygame.Surface((100,100), pygame.SRCALPHA)
-        self.surf.blit(pygame.image.load(f"assets/{self.color}_soldier.png"),(0,0))
+        self.size = size
+        self.surf = pygame.Surface((100, 100), pygame.SRCALPHA)
+        img = pygame.image.load(f"assets/{self.color}_soldier.png")
+        img = pygame.transform.scale(img, (size, size))
+        self.surf.blit(img, (0, 0))
         self.rect = self.surf.get_rect()
         if (init_pos is not None):
             self.rect.x, self.rect.y = init_pos
+
+    def get_pos(self):
+        return (self.rect.y//self.size, self.rect.x//self.size)
     
     def move_to(self, pos):
-        self.rect.x, self.rect.y = pos
+        self.rect.x, self.rect.y = pos[1]*self.size, pos[0]*self.size
 
-    def get_possible_moves(self):
-        return [( random.randrange(2,5), random.randrange(0,7) )]
+    def get_possible_moves(self, board):
+        x, y = self.get_pos()
+        moves = []
+        if self.color == "black":
+            if board[x+1][y] == 0:
+                moves.append((x+1, y))
+                if x == 1 and board[3][y] == 0:
+                    moves.append((3, y))
+            if y != 0 and board[x+1][y-1] != 0 and (board[x+1][y-1]).color != self.color:
+                moves.append((x+1, y-1))
+            if y != 7 and board[x+1][y+1] != 0 and (board[x+1][y+1]).color != self.color:
+                moves.append((x+1, y+1))
+        else:
+            if board[x-1][y] == 0:
+                moves.append((x-1, y))
+                if x == 6 and board[4][y] == 0:
+                    moves.append((4, y))
+            if y != 0 and board[x-1][y-1] != 0 and (board[x-1][y-1]).color != self.color:
+                moves.append((x-1, y-1))
+            if y != 7 and board[x-1][y+1] != 0 and (board[x-1][y+1]).color != self.color:
+                moves.append((x-1, y+1))
+        print(moves)
+        return moves
