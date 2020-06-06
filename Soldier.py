@@ -3,7 +3,7 @@ from Elephant import Elephant
 
 
 class Soldier(pygame.sprite.Sprite):
-    def __init__(self, color, size, init_pos=None):
+    def __init__(self, color, size, init_pos):
         super(Soldier, self).__init__()
         self.color = color
         self.size = size
@@ -12,8 +12,7 @@ class Soldier(pygame.sprite.Sprite):
         img = pygame.transform.scale(img, (size, size))
         self.surf.blit(img, (0, 0))
         self.rect = self.surf.get_rect()
-        if (init_pos is not None):
-            self.rect.x, self.rect.y = init_pos
+        self.rect.x, self.rect.y = init_pos
 
     def get_pos(self):
         return (self.rect.y//self.size, self.rect.x//self.size)
