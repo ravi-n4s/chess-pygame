@@ -1,0 +1,18 @@
+import pygame
+import random
+
+class Soldier(pygame.sprite.Sprite):
+    def __init__(self, color, init_pos=None):
+        super(Soldier, self).__init__()
+        self.color = color
+        self.surf = pygame.Surface((100,100), pygame.SRCALPHA)
+        self.surf.blit(pygame.image.load(f"assets/{self.color}_soldier.png"),(0,0))
+        self.rect = self.surf.get_rect()
+        if (init_pos is not None):
+            self.rect.x, self.rect.y = init_pos
+    
+    def move_to(self, pos):
+        self.rect.x, self.rect.y = pos
+
+    def get_possible_moves(self):
+        return [( random.randrange(2,5), random.randrange(0,7) )]
