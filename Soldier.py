@@ -7,12 +7,12 @@ class Soldier(pygame.sprite.Sprite):
         super(Soldier, self).__init__()
         self.color = color
         self.size = size
-        self.surf = pygame.Surface((100, 100), pygame.SRCALPHA)
+        self.surf = pygame.Surface((size, size), pygame.SRCALPHA)
         img = pygame.image.load(f"assets/{self.color}_soldier.png")
         img = pygame.transform.scale(img, (size, size))
         self.surf.blit(img, (0, 0))
         self.rect = self.surf.get_rect()
-        self.rect.x, self.rect.y = init_pos
+        self.move_to(init_pos)
 
     def get_pos(self):
         return (self.rect.y//self.size, self.rect.x//self.size)
@@ -41,5 +41,4 @@ class Soldier(pygame.sprite.Sprite):
                 moves.append((x-1, y-1))
             if y != 7 and board[x-1][y+1] != 0 and (board[x-1][y+1]).color != self.color:
                 moves.append((x-1, y+1))
-        print(moves)
         return moves

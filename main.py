@@ -7,8 +7,6 @@ from Camel import Camel
 from Horse import Horse
 from Soldier import Soldier
 from Move import Move
-from tkinter import *
-from tkinter import messagebox
 
 
 pygame.init()
@@ -18,24 +16,24 @@ ICON_SIZE = SCREEN_SIZE//8
 screen = pygame.display.set_mode([SCREEN_SIZE, SCREEN_SIZE])
 running = True
 bg_img = pygame.transform.scale(pygame.image.load("assets/board.png"), (SCREEN_SIZE, SCREEN_SIZE))
-move_indicator = pygame.transform.scale(pygame.image.load("assets/move.png"), (ICON_SIZE, ICON_SIZE))
+move_indicator = pygame.transform.scale(pygame.image.load("assets/move.png"), (SCREEN_SIZE, SCREEN_SIZE))
 
 Board = [ #initialize board
-    [Elephant("black", ICON_SIZE, (0, 0)), Horse("black", ICON_SIZE, (ICON_SIZE, 0)), Camel("black", ICON_SIZE, (2*ICON_SIZE, 0)), Queen("black", ICON_SIZE),
-     King("black", ICON_SIZE), Camel("black", ICON_SIZE, (5*ICON_SIZE, 0)), Horse("black", ICON_SIZE, (6*ICON_SIZE, 0)), Elephant("black", ICON_SIZE, (7*ICON_SIZE, 0))],
-    [Soldier("black", ICON_SIZE, (0, ICON_SIZE)), Soldier("black", ICON_SIZE, (ICON_SIZE, ICON_SIZE)), Soldier("black", ICON_SIZE, (2*ICON_SIZE, ICON_SIZE)), Soldier("black", ICON_SIZE, (3*ICON_SIZE, ICON_SIZE)),
-     Soldier("black", ICON_SIZE, (4*ICON_SIZE, ICON_SIZE)), Soldier("black", ICON_SIZE, (5*ICON_SIZE, ICON_SIZE)), Soldier("black", ICON_SIZE, (6*ICON_SIZE, ICON_SIZE)), Soldier("black", ICON_SIZE, (7*ICON_SIZE, ICON_SIZE))],
+    [Elephant("black", ICON_SIZE, (0, 0)), Horse("black", ICON_SIZE, (0,1)), Camel("black", ICON_SIZE, (0,2)), Queen("black", ICON_SIZE),
+     King("black", ICON_SIZE), Camel("black", ICON_SIZE, (0,5)), Horse("black", ICON_SIZE, (0,6)), Elephant("black", ICON_SIZE, (0,7))],
+    [Soldier("black", ICON_SIZE, (1,0)), Soldier("black", ICON_SIZE, (1,1)), Soldier("black", ICON_SIZE, (1,2)), Soldier("black", ICON_SIZE, (1,3)),
+     Soldier("black", ICON_SIZE, (1,4)), Soldier("black", ICON_SIZE, (1,5)), Soldier("black", ICON_SIZE, (1,6)), Soldier("black", ICON_SIZE, (1,7))],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
-    [Soldier("white", ICON_SIZE, (0, 6*ICON_SIZE)), Soldier("white", ICON_SIZE, (ICON_SIZE, 6*ICON_SIZE)), Soldier("white", ICON_SIZE, (2*ICON_SIZE, 6*ICON_SIZE)), Soldier("white", ICON_SIZE, (3*ICON_SIZE, 6*ICON_SIZE)),
-     Soldier("white", ICON_SIZE, (4*ICON_SIZE, 6*ICON_SIZE)), Soldier("white", ICON_SIZE, (5*ICON_SIZE, 6*ICON_SIZE)), Soldier("white", ICON_SIZE, (6*ICON_SIZE, 6*ICON_SIZE)), Soldier("white", ICON_SIZE, (7*ICON_SIZE, 6*ICON_SIZE))],
-    [Elephant("white", ICON_SIZE, (0, 7*ICON_SIZE)), Horse("white", ICON_SIZE, (ICON_SIZE, 7*ICON_SIZE)), Camel("white", ICON_SIZE, (2*ICON_SIZE, 7*ICON_SIZE)), Queen("white", ICON_SIZE),
-     King("white", ICON_SIZE), Camel("white", ICON_SIZE, (5*ICON_SIZE, 7*ICON_SIZE)), Horse("white", ICON_SIZE, (6*ICON_SIZE, 7*ICON_SIZE)), Elephant("white", ICON_SIZE, (7*ICON_SIZE, 7*ICON_SIZE))]
+    [Soldier("white", ICON_SIZE, (6, 0)), Soldier("white", ICON_SIZE, (6,1)), Soldier("white", ICON_SIZE, (6,2)), Soldier("white", ICON_SIZE, (6,3)),
+     Soldier("white", ICON_SIZE, (6,4)), Soldier("white", ICON_SIZE, (6,5)), Soldier("white", ICON_SIZE, (6,6)), Soldier("white", ICON_SIZE, (6,7))],
+    [Elephant("white", ICON_SIZE, (7,0)), Horse("white", ICON_SIZE, (7,1)), Camel("white", ICON_SIZE, (7,2)), Queen("white", ICON_SIZE),
+     King("white", ICON_SIZE), Camel("white", ICON_SIZE, (7,5)), Horse("white", ICON_SIZE, (7,6)), Elephant("white", ICON_SIZE, (7,7))]
 ]
 
-mouse_click = (-1,-1)
+mouse_click = (-1, -1)
 possible_moves = []
 next_move = "white"
 clicked_coin = (-1,-1)
@@ -57,11 +55,9 @@ while running:
                 continue
             screen.blit(piece.surf, piece.rect) #display piece
             if mouse_click[0] != -1 and piece.rect.collidepoint(mouse_click) and piece.color == next_move: #if clicked on sprite 
-                possible_moves = [] #clear possible moves
                 clicked_coin = piece.get_pos() #save clicked coin position
-                for row, col in piece.get_possible_moves(Board):
-                    possible_moves.append(Move(ICON_SIZE, (col*ICON_SIZE, row*ICON_SIZE)))  #append move sprite to all possible_moves
-                mouse_click = (-1,-1) #reset mouseclick status after clicking on sprite
+                possible_moves = [Move(ICON_SIZE, move) for move in piece.get_possible_moves(Board)] #append move sprite to all possible_moves
+                mouse_click = (-1, -1) #reset mouseclick status after clicking on sprite
     
     if mouse_click[0] != -1: #if not clicked on sprite
         for move in possible_moves:
@@ -78,11 +74,11 @@ while running:
                 Board[clicked_coin[0]][clicked_coin[1]] = 0 #make old position as empty
 
                 next_move = "white" if next_move == "black" else "black"
-                mouse_click = (-1,-1) #reset mouseclick status after moving
+                mouse_click = (-1, -1) #reset mouseclick status after moving
         #if clicked anywhere else
         possible_moves = []
         clicked_coin = None
-        mouse_click = (-1,-1)
+        mouse_click = (-1, -1)
 
     for move in possible_moves:
         screen.blit(move.surf, move.rect)

@@ -2,7 +2,7 @@ import pygame
 
 
 class Elephant(pygame.sprite.Sprite):
-    def __init__(self, color, size, init_pos=None):
+    def __init__(self, color, size, init_pos):
         super(Elephant, self).__init__()
         self.color = color
         self.size = size
@@ -11,8 +11,7 @@ class Elephant(pygame.sprite.Sprite):
         img = pygame.transform.scale(img, (size, size))
         self.surf.blit(img, (0, 0))
         self.rect = self.surf.get_rect()
-        if (init_pos is not None):
-            self.rect.x, self.rect.y = init_pos
+        self.move_to(init_pos)
 
     def get_pos(self):
         return (self.rect.y//self.size, self.rect.x//self.size)
@@ -22,4 +21,38 @@ class Elephant(pygame.sprite.Sprite):
 
     def get_possible_moves(self, board):
         x, y = self.get_pos()
-        return []
+        moves = []
+        for row in range(x+1, 8):  # down
+            print(row)
+            if board[row][y] == 0:
+                moves.append((row, y))
+            elif board[row][y].color != self.color:
+                moves.append((row, y))
+                break
+            else:
+                break
+        for row in range(x-1, -1, -1):  # up
+            if board[row][y] == 0:
+                moves.append((row, y))
+            elif board[row][y].color != self.color:
+                moves.append((row, y))
+                break
+            else:
+                break
+        for col in range(y-1, -1, -1):  # left
+            if board[x][col] == 0:
+                moves.append((x, col))
+            elif board[x][col].color != self.color:
+                moves.append((x, col))
+                break
+            else:
+                break
+        for col in range(y+1, 8):  # left
+            if board[x][col] == 0:
+                moves.append((x, col))
+            elif board[x][col].color != self.color:
+                moves.append((x, col))
+                break
+            else:
+                break
+        return moves
