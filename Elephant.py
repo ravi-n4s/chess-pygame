@@ -23,7 +23,6 @@ class Elephant(pygame.sprite.Sprite):
         x, y = self.get_pos()
         moves = []
         for row in range(x+1, 8):  # down
-            print(row)
             if board[row][y] == 0:
                 moves.append((row, y))
             elif board[row][y].color != self.color:

@@ -21,4 +21,49 @@ class Camel(pygame.sprite.Sprite):
 
     def get_possible_moves(self, board):
         x, y = self.get_pos()
-        return []
+        moves = []
+        count = 1
+        while  x + count < 8 and y + count < 8: #diagnol right bottom
+            if board[x+count][y+count] == 0:
+                moves.append((x+count,y+count))
+                count += 1
+            elif board[x+count][y+count].color != self.color:
+                moves.append((x+count,y+count))
+                count += 1
+                break
+            else:
+                break
+        count = 1
+        while  x + count < 8 and y - count < 8: #diagnol left bottom
+            if board[x+count][y-count] == 0:
+                moves.append((x+count,y-count))
+                count += 1
+            elif board[x+count][y-count].color != self.color:
+                moves.append((x+count,y-count))
+                count += 1
+                break
+            else:
+                break
+        count = 1
+        while  x - count < 8 and y - count < 8: #diagnol left top
+            if board[x-count][y-count] == 0:
+                moves.append((x-count,y-count))
+                count += 1
+            elif board[x-count][y-count].color != self.color:
+                moves.append((x-count,y-count))
+                count += 1
+                break
+            else:
+                break
+        count = 1
+        while  x - count < 8 and y + count < 8: #diagnol left top
+            if board[x-count][y+count] == 0:
+                moves.append((x-count,y+count))
+                count += 1
+            elif board[x-count][y+count].color != self.color:
+                moves.append((x-count,y+count))
+                count += 1
+                break
+            else:
+                break
+        return moves

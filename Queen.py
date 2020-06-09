@@ -22,4 +22,81 @@ class Queen(pygame.sprite.Sprite):
 
     def get_possible_moves(self, board):
         x, y = self.get_pos()
-        return []
+        moves = []
+        for row in range(x+1, 8):  # down
+            if board[row][y] == 0:
+                moves.append((row, y))
+            elif board[row][y].color != self.color:
+                moves.append((row, y))
+                break
+            else:
+                break
+        for row in range(x-1, -1, -1):  # up
+            if board[row][y] == 0:
+                moves.append((row, y))
+            elif board[row][y].color != self.color:
+                moves.append((row, y))
+                break
+            else:
+                break
+        for col in range(y-1, -1, -1):  # left
+            if board[x][col] == 0:
+                moves.append((x, col))
+            elif board[x][col].color != self.color:
+                moves.append((x, col))
+                break
+            else:
+                break
+        for col in range(y+1, 8):  # left
+            if board[x][col] == 0:
+                moves.append((x, col))
+            elif board[x][col].color != self.color:
+                moves.append((x, col))
+                break
+            else:
+                break
+        count = 1
+        while  x + count < 8 and y + count < 8: #diagnol right bottom
+            if board[x+count][y+count] == 0:
+                moves.append((x+count,y+count))
+                count += 1
+            elif board[x+count][y+count].color != self.color:
+                moves.append((x+count,y+count))
+                count += 1
+                break
+            else:
+                break
+        count = 1
+        while  x + count < 8 and y - count < 8: #diagnol left bottom
+            if board[x+count][y-count] == 0:
+                moves.append((x+count,y-count))
+                count += 1
+            elif board[x+count][y-count].color != self.color:
+                moves.append((x+count,y-count))
+                count += 1
+                break
+            else:
+                break
+        count = 1
+        while  x - count < 8 and y - count < 8: #diagnol left top
+            if board[x-count][y-count] == 0:
+                moves.append((x-count,y-count))
+                count += 1
+            elif board[x-count][y-count].color != self.color:
+                moves.append((x-count,y-count))
+                count += 1
+                break
+            else:
+                break
+        count = 1
+        while  x - count < 8 and y + count < 8: #diagnol left top
+            if board[x-count][y+count] == 0:
+                moves.append((x-count,y+count))
+                count += 1
+            elif board[x-count][y+count].color != self.color:
+                moves.append((x-count,y+count))
+                count += 1
+                break
+            else:
+                break
+        return moves

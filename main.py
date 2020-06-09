@@ -10,15 +10,14 @@ from Move import Move
 
 
 pygame.init()
-SCREEN_SIZE = 720
+SCREEN_SIZE = 800
 ICON_SIZE = SCREEN_SIZE//8
 
 screen = pygame.display.set_mode([SCREEN_SIZE, SCREEN_SIZE])
-running = True
 bg_img = pygame.transform.scale(pygame.image.load("assets/board.png"), (SCREEN_SIZE, SCREEN_SIZE))
 move_indicator = pygame.transform.scale(pygame.image.load("assets/move.png"), (SCREEN_SIZE, SCREEN_SIZE))
 
-Board = [ #initialize board
+Board = [ 
     [Elephant("black", ICON_SIZE, (0, 0)), Horse("black", ICON_SIZE, (0,1)), Camel("black", ICON_SIZE, (0,2)), Queen("black", ICON_SIZE),
      King("black", ICON_SIZE), Camel("black", ICON_SIZE, (0,5)), Horse("black", ICON_SIZE, (0,6)), Elephant("black", ICON_SIZE, (0,7))],
     [Soldier("black", ICON_SIZE, (1,0)), Soldier("black", ICON_SIZE, (1,1)), Soldier("black", ICON_SIZE, (1,2)), Soldier("black", ICON_SIZE, (1,3)),
@@ -36,28 +35,25 @@ Board = [ #initialize board
 mouse_click = (-1, -1)
 possible_moves = []
 next_move = "white"
-clicked_coin = (-1,-1)
+running = True
 
 while running:
     for event in pygame.event.get():
-        if event.type == QUIT:
-            running = False
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                running = False
         if event.type == pygame.MOUSEBUTTONUP:
             mouse_click = pygame.mouse.get_pos()
+        elif event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+            running = False
+        
     screen.blit(bg_img, (0, 0))  # background image
 
-    for row, values in enumerate(Board):
-        for col, piece in enumerate(values):
-            if piece == 0:
-                continue
-            screen.blit(piece.surf, piece.rect) #display piece
-            if mouse_click[0] != -1 and piece.rect.collidepoint(mouse_click) and piece.color == next_move: #if clicked on sprite 
-                clicked_coin = piece.get_pos() #save clicked coin position
-                possible_moves = [Move(ICON_SIZE, move) for move in piece.get_possible_moves(Board)] #append move sprite to all possible_moves
-                mouse_click = (-1, -1) #reset mouseclick status after clicking on sprite
+    for row in Board:
+        for piece in row:
+            if piece:
+                screen.blit(piece.surf, piece.rect)
+                if mouse_click[0] != -1 and piece.rect.collidepoint(mouse_click) and piece.color == next_move: #if clicked on sprite 
+                    clicked_coin = piece.get_pos() #save clicked coin position
+                    possible_moves = [Move(ICON_SIZE, move) for move in piece.get_possible_moves(Board)] #save all possible_moves
+                    mouse_click = (-1, -1) #reset mouseclick status after clicking on sprite
     
     if mouse_click[0] != -1: #if not clicked on sprite
         for move in possible_moves:
@@ -67,7 +63,11 @@ while running:
                     print(f"{next_move} wins the game")
                     running = False
                     continue
-                print(f"{clicked_coin} -- moved to -- {(x,y)}")
+                
+                if Board[x][y]:
+                    print(f"{next_move} {type(Board[clicked_coin[0]][clicked_coin[1]]).__name__} killed " + ("white " if next_move == "black" else "black ") + f"{type(Board[x][y]).__name__} at {(clicked_coin)}")
+                else:
+                    print(f"{next_move} {type(Board[clicked_coin[0]][clicked_coin[1]]).__name__} moved to {(x,y)}")
                 
                 Board[clicked_coin[0]][clicked_coin[1]].move_to((x,y)) #move the coin to possible_move co-ordinate
                 Board[x][y] = Board[clicked_coin[0]][clicked_coin[1]] #update value in board
@@ -75,6 +75,7 @@ while running:
 
                 next_move = "white" if next_move == "black" else "black"
                 mouse_click = (-1, -1) #reset mouseclick status after moving
+                break
         #if clicked anywhere else
         possible_moves = []
         clicked_coin = None
