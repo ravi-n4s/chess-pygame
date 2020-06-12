@@ -21,7 +21,7 @@ class Horse(pygame.sprite.Sprite):
 
     def tryGetBoardValue(self, board, x, y):
         try:
-            if board[x][y] == 0 or board[x][y].color != self.color and x > -1 and y > -1:
+            if x > -1 and y > -1 and (board[x][y] == 0 or board[x][y].color != self.color):
                 return (x,y)
             else:
                 return None

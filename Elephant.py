@@ -12,11 +12,13 @@ class Elephant(pygame.sprite.Sprite):
         self.surf.blit(img, (0, 0))
         self.rect = self.surf.get_rect()
         self.move_to(init_pos)
+        self.isMoved = False
 
     def get_pos(self):
         return (self.rect.y//self.size, self.rect.x//self.size)
 
     def move_to(self, pos):
+        self.isMoved = True
         self.rect.x, self.rect.y = pos[1]*self.size, pos[0]*self.size
 
     def get_possible_moves(self, board):

@@ -10,7 +10,7 @@ from Move import Move
 
 
 pygame.init()
-SCREEN_SIZE = 800
+SCREEN_SIZE = 720
 ICON_SIZE = SCREEN_SIZE//8
 
 screen = pygame.display.set_mode([SCREEN_SIZE, SCREEN_SIZE])
@@ -67,6 +67,11 @@ while running:
                 if Board[x][y]:
                     print(f"{next_move} {type(Board[clicked_coin[0]][clicked_coin[1]]).__name__} killed " + ("white " if next_move == "black" else "black ") + f"{type(Board[x][y]).__name__} at {(clicked_coin)}")
                 else:
+                    if type(Board[clicked_coin[0]][clicked_coin[1]]) is King and abs(clicked_coin[1] - y) == 2: #castling
+                        Board[clicked_coin[0]][clicked_coin[1]].do_castling(Board, (x,y))
+                        next_move = "white" if next_move == "black" else "black"
+                        mouse_click = (-1, -1)
+                        continue
                     print(f"{next_move} {type(Board[clicked_coin[0]][clicked_coin[1]]).__name__} moved to {(x,y)}")
                 
                 Board[clicked_coin[0]][clicked_coin[1]].move_to((x,y)) #move the coin to possible_move co-ordinate

@@ -1,7 +1,6 @@
 # chess-pygame
 
 TODO
-- castling
 - soldier upgrade when reach end
 
 
